@@ -1,0 +1,72 @@
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --fg: #1c1f24;
+  --muted: #6b7280;
+  --line: #e2e5ea;
+  --accent: #d7141e;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --panel: #1d2026;
+    --fg: #e8eaee;
+    --muted: #9aa1ad;
+    --line: #2c313a;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.5 system-ui, 'Malgun Gothic', sans-serif;
+}
+.app { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+header h1 { margin: 0 0 4px; font-size: 22px; }
+header p { margin: 0 0 16px; color: var(--muted); }
+main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.sticky { position: sticky; top: 16px; }
+@media (max-width: 800px) { .sticky { position: static; } }
+h2 { font-size: 14px; margin: 16px 0 8px; }
+h2:first-child { margin-top: 0; }
+.search { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 4px; margin-top: 8px; max-height: 300px; overflow: auto; }
+.cell { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 2px 4px; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--fg); cursor: pointer; }
+.cell:hover { background: var(--bg); }
+.cell.on { border-color: var(--accent); background: var(--bg); }
+.cell svg { width: 24px; height: 24px; }
+.cell small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: var(--muted); }
+.row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+.field { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; flex: 1; min-width: 120px; }
+.field span { color: var(--muted); font-size: 12px; }
+.field input[type='color'] { width: 100%; height: 32px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: none; }
+select { padding: 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.check { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+.check input[type='color'] { width: 32px; height: 24px; padding: 0; border: 1px solid var(--line); }
+.hint { color: var(--muted); font-size: 12px; margin: 6px 0; }
+.warn { color: #c2410c; font-size: 12px; }
+.link { background: none; border: none; color: var(--accent); cursor: pointer; padding: 6px 0; }
+.seg { display: flex; gap: 4px; margin-bottom: 8px; }
+.seg button { flex: 1; padding: 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); cursor: pointer; }
+.seg button.on { border-color: var(--accent); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.tile { margin: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.tile-imgs { min-height: 140px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 8px; }
+.tile figcaption { text-align: center; font-size: 11px; padding: 4px; background: var(--panel); color: var(--muted); }
+.tile.light .tile-imgs { background: #fff; }
+.tile.dark .tile-imgs { background: #202124; }
+.tile.checker .tile-imgs { background: repeating-conic-gradient(#d0d0d0 0 25%, #fff 0 50%) 0 0 / 16px 16px; }
+.zoomed { image-rendering: pixelated; }
+.presets { list-style: none; margin: 0; padding: 0; }
+.presets li { margin-bottom: 8px; }
+.presets small { display: block; margin-left: 24px; color: var(--muted); }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+button { font: inherit; }
+.actions button { padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); cursor: pointer; }
+.actions .primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.actions button:disabled { opacity: 0.5; cursor: not-allowed; }
