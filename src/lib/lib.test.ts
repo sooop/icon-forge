@@ -127,6 +127,7 @@ describe('buildZip', () => {
         'favicon/favicon.ico',
         'favicon/link-tags.html',
         'icon-forge.json',
+        'icon.svg',
         'pwa/icon-192.png',
         'pwa/icon-512.png',
         'pwa/icon-maskable-192.png',

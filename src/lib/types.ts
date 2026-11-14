@@ -36,3 +36,15 @@ export interface Selection {
 
 /** 출력 용도별 렌더 규칙: maskable 은 안전 영역 여백, apple 은 불투명 배경 강제 */
 export type RenderMode = 'normal' | 'maskable' | 'apple'
+
+export type Backdrop = 'light' | 'dark' | 'checker'
+
+/** 화면 상태 기억(설정 JSON 내보내기에는 넣지 않는다). icon-forge:v1 에 `prefs` 필드로 덧붙여 저장한다 */
+export interface Prefs {
+  backdrop: Backdrop
+  /** maskable 안전 영역 오버레이 */
+  maskGuide: boolean
+  recentIcons: string[]
+  favorites: string[]
+  recentColors: string[]
+}

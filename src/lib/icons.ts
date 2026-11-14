@@ -10,10 +10,13 @@ export interface IconEntry {
   aliases: string[]
 }
 
+const collator = new Intl.Collator('en')
 const table = icons as unknown as Record<string, IconNode>
 
 export const kebab = (k: string) =>
   k.replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2').replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Za-z])([0-9])/g, '$1-$2').toLowerCase()
+
+const primaryOf = new Map<string, string>()
 
 /** lucide 는 별칭마다 같은 노드를 따로 내보내므로 그림이 같은 것끼리 묶는다 */
 function buildEntries(): IconEntry[] {
@@ -27,19 +30,34 @@ function buildEntries(): IconEntry[] {
   const out: IconEntry[] = []
   for (const keys of groups.values()) {
     const primary = keys.reduce((a, b) => (b.length < a.length ? b : a))
+    for (const k of keys) primaryOf.set(k, primary)
     out.push({ key: primary, label: kebab(primary), aliases: keys.filter((k) => k !== primary).map(kebab) })
   }
-  return out.sort((a, b) => a.label.localeCompare(b.label))
+  return out.sort((a, b) => collator.compare(a.label, b.label))
 }
 
 export const ICON_ENTRIES = buildEntries()
 
+
+/** 별칭 키도 같은 그림의 대표 키로 바꾼다. 라이브러리에 없는 키는 null */
+export function canonicalKey(key: string): string | null {
+  if (!Object.hasOwn(table, key)) return null
+  return primaryOf.get(key) ?? key
+}
+
 export function getIconNode(key: string): IconNode | null {
-  return table[key] ?? null
+  return Object.hasOwn(table, key) ? table[key] : null
 }
 
 export function searchIcons(query: string): IconEntry[] {
   const q = query.trim().toLowerCase().replace(/\s+/g, '-')
   if (!q) return ICON_ENTRIES
   return ICON_ENTRIES.filter((e) => e.label.includes(q) || e.aliases.some((a) => a.includes(q)))
+}
+
+/** 설정의 아이콘 키를 검증한다. 별칭이면 대표 키로 바꾸고, 라이브러리에 없으면 fallback 으로 되돌리고 원래 키를 missing 으로 알린다 */
+export function fixIcon<T extends { icon: string }>(s: T, fallback: string): { settings: T; missing: string | null } {
+  const k = canonicalKey(s.icon)
+  if (k === null) return { settings: { ...s, icon: fallback }, missing: s.icon }
+  return { settings: k === s.icon ? s : { ...s, icon: k }, missing: null }
 }

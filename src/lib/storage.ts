@@ -1,6 +1,7 @@
 import { DEFAULT_SELECTION, DEFAULT_SETTINGS } from './defaults'
 import { MAX_CUSTOM_SIZE } from './presets'
-import type { BgShape, Selection, Settings } from './types'
+import { sanitizePrefs } from './prefs'
+import type { BgShape, Prefs, Selection, Settings } from './types'
 
 const KEY = 'icon-forge:v1'
 const FORMAT = 'icon-forge'
@@ -77,9 +78,20 @@ export function loadState(): State {
   return { settings: DEFAULT_SETTINGS, selection: DEFAULT_SELECTION }
 }
 
-export function saveState(state: State): void {
+/** 같은 키에 덧붙여 저장한 화면 상태(prefs). 옛 버전이 쓴 값에는 없으므로 기본값이 된다 */
+export function loadPrefs(): Prefs {
   try {
-    localStorage.setItem(KEY, JSON.stringify(state))
+    const t = localStorage.getItem(KEY)
+    if (t) return sanitizePrefs((JSON.parse(t) as { prefs?: unknown } | null)?.prefs)
+  } catch {
+    // 무시
+  }
+  return sanitizePrefs(undefined)
+}
+
+export function saveState(state: State, prefs?: Prefs): void {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(prefs ? { ...state, prefs } : state))
   } catch {
     // 용량 초과·차단은 무시
   }
